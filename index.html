@@ -1,16 +1,16 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Doc</title>
     <link rel="stylesheet" href="style.css">
-    
+   
 </head>
 
 
 <body>
- 
+
     <p>Rock Paper Scissors</p>
     <button onclick="
         playGame('rock');
@@ -25,22 +25,45 @@
     playGame('scissors');
     ">Scissors</button>
 
+    <p class="js-result"></p>
+    <p class="js-moves"></p>
+    <p class="js-score"></p>
+
     <button onclick="
     score.wins = 0;
     score.losses = 0;
-    score.ties = 0;">
+    score.ties = 0;
+    localStorage.removeItem('score');
+    updateScoreElement();">
         Reset Score
     </button>
    
 
-    <script>
-        const score = {
-            wins: 0,
-            losses: 0,
-            ties: 0
-        };
 
 
+<script>
+        let score = JSON.parse(localStorage.getItem('score')) ||
+            {
+                wins:0,
+                losses: 0,
+                ties: 0
+            
+            };
+
+            /*
+            if (!score) {
+                wins:0,
+                losses:0,
+                ties:0
+            };
+            */
+
+            document.querySelector('.js-score')
+            .innerHTML = `Wins: ${score.wins}, Losses: ${score.losses}, Ties: ${score.ties}`;
+
+
+
+            
         function playGame(playerMove){
             const computer_move = pickcomputer_move();
             let result = '';
@@ -75,9 +98,7 @@ Wins: ${score.wins}, Losses: ${score.losses}, Ties: ${score.ties}`);
                     result = 'you win';
                 }
                 
-                 
-                alert(`You picked ${playerMove}, computer picked ${computer_move}, ${result}
-Wins: ${score.wins}, Losses: ${score.losses}, Ties: ${score.ties}`);
+              
             }
            if (result === 'you win') {
                 score.wins += 1;
@@ -87,9 +108,26 @@ Wins: ${score.wins}, Losses: ${score.losses}, Ties: ${score.ties}`);
                 score.ties += 1;
             }
             
+
+
+            localStorage.setItem('score', JSON.stringify(score));
+                 
+           updateScoreElement();
+
+
+           document.querySelector('.js-result')
+           .innerHTML = result;
+
+           document.querySelector('.js-moves')
+           .innerHTML = `You ${playerMove} - ${computer_move} Computer`;
+           
         }
      
-  
+        function updateScoreElement(){
+             document.querySelector('.js-score')
+                .innerHTML = `Wins: ${score.wins}, Losses: ${score.losses}, Ties: ${score.ties}`;
+
+        };
         
         function pickcomputer_move() {
             const random = Math.random();
@@ -103,14 +141,15 @@ Wins: ${score.wins}, Losses: ${score.losses}, Ties: ${score.ties}`);
             }
             
            return computer_move;
-        } 
+        } ;
 
 
-    </script> 
+  </script>
 
 
-</body>    
+  </body>
 
+  
 
 
 </html>
